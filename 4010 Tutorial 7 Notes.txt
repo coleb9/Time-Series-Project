@@ -1,0 +1,29 @@
+4010 Tutorial 7 Notes
+
+T1
+- 
+- 2 convolutional layers, 2 transposed layers, 
+- purpose of autoencoder is to get it to reconstruct the original data we pass through it, so we can know what the data structure is like and so we can detect anomalies. output 1 feature
+- anomaly detection using to supervised training, this time we just want to pass training so the model can learn the exact values
+- reconstruction loss has to be greater than threshold value
+- decide if a sample is anomalous based on mean squared error
+- if you are interested in a specific date that may be anomalous, since we are doing the sliding window, that date will pass through multiple times. for ex we can conclude here that 5 is an anomaly since we know that 3 samples that it is in have been flagged because of mae
+- You have to try and use your own interpretation of the anomaly plot to see whether you agree with the model's anomaly detection range.
+- here we are only checking for anomalies greater than the max value, but in other cases we should also be checking for anomalies below the min.
+- main point is to fine tune your threshold so that the values that you think might be anomalous are shown to be so using the graph. using 2 methods mae and graph to prove that the values are anomalous
+- 
+
+T2 
+- pretty much the same setup as the first one except now tcn and last
+- TCN temporal convolution dilates the layer by skimming the input rather than taking every value
+- they do the same thing as if you just return sequences = true but they did it  fancy way by adding an extra layer repeat vector that doesn't actually train anything
+- 
+
+course presentation
+- if there is something specific you want to talk about for the model architecture, parameters etc, you can show code but if it is something basic like how we always scale etc, then you should just use text to explain. he said at the end of the day you want the presentation to look nice and aesthetic matters. they just want us to show that we know what we are talking about and that we gave the architecture and stuff some thought. 
+- will have to submit code before presenting, 
+- for final report 4pages including references
+- we will get a rubric for the presentation
+- for the code you just submit the code online to GitHub and share the link, just tell them where to look on the file, etc
+- in the final report you just have a link to the code
+- 

@@ -1,0 +1,101 @@
+4010 Tutorial Notes
+Tutorial 1
+- Most important to know the output, 9 features, walking, downstairs walking, etc
+- if you want to get same results each time you run, you need to define a numpy seed and use the same one each time
+- plot distributions: look at how skewed (right weighted) they are, normal distribution?, spread of data. For our neural network, might have to do feature scaling depending on these results.
+
+- LSTM long short term memory: main purpose -> LSTM model (cells) can capture long term temporal complexities, but model is much more complex
+- Number of outputs is number of classes we are trying to predict
+- keras utils .plotmodel is good for visualizing neural network architecture
+- Inputshape: (None, 128, 9) -> None=as many samples as you want but for us 1 sample (for every 1 input, 1 output), 128 time steps, 9 outputs.
+- For A2 he is going to ask about the output of the neural network
+- when you define a seed, you get the same results each time you run the notebook even if shuffle for training is true
+- Looking at model loss plot: 
+	-distance between validation and train error is the generalization error, model generalizing ability
+	- if validation loss less than training check model architecture since it means that the model is worse then just guessing a value. bad model fit
+- classification, so confusion matrix: 6 different classes, and for each one compares what it predicted and the actual value
+	-says its walking but its actually something else = false positive
+- CNN:
+-in (1, 128, 9) -> (1, 126, 64) from filter
+- he says he will ask questions about the filters, max pooling, padding, flatten
+ **wants to know logically why the different layers are different sizes
+- LSTM took much longer but it is able to show temporal tendencies
+- Validation loss is increasing, while the training loss converges, so we know that the model is overfitting and is not generalizing well.
+- Use Hyperparameter optimization to not overfit		
+- try to consider external factors with why you may be getting some false negatives/postiives or why your results are not perfect. ex error in getting the data, inaccurate sensor.
+
+Tutorial 2
+- Look at libraries (pandas, numpy, etc) documentation to help with coding and 
+- If variance is changing, apply transformation (box cogs, log), since differencing wont work
+- This data, non stationary, seasonal (12 months cycle)
+- seasonal decomposition
+	- residuals = any noise
+	- seasononal decompose parameter model(additive, multiplicative). difference is thath
+	- additive - Y = T(t) + S(t) + e
+	- multiplicative - Y = T(t)S(t)e
+	- if seasonality is affected by the trend or other variables then you need to use multiplicative. so here we can use additive since the seasonality stays the same the entire time.
+		an example would be the amplitude of the data changes with each seasonal cycle.
+	- docs statsmodels.tsa.seasonal.seasonal_decompose
+- len(df) -> 168, we want the last 12 months for testing, so 168-12= 156. save 0-155 for training
+- train = iloc[:156] = 0->155.....  or could do iloc[:-12] which is easier in my opinion
+- test = df.iloc[156:]
+- feature scaling (minmax scaling - 0 and 1)
+- TimeseriesGenerator, pass in training data. does a sliding window for you, using x values, predicts y.
+- important when plotting values, to not be looking at the scaled range, you wan to plot the original values. use scalar.inverse_transform(predictions)
+- model worked well based on rmse
+
+Tutorial 3
+- GRU Gatred recurrent unit, reduced output gate. reduces complexity while still getting similar behaviour.
+- use cuda to mount to gpu, can do in colab free version by just choosing gpu. Have to have a specific gpu, take advantage of its capabilities.
+- Feature Engineering
+	- creating your own features
+	- generate lagged observations as you would do for different time steps and assign them to new attributes 
+	- can assign specific time attributes using df_features
+	- one hot encoding for the month day day of week and year
+	- Generating cyclic features, using periodic function to see if timing relative to the day is important. Just gives more context and may be able to find some correlation for the model.
+	- generally, the more in depth you go for the feature engineering, the better results that you get
+- validation split is split off of the test set
+- max absolute takes max in a -1 to 1 range
+- robust scalar - 
+- use pytorch library dataloader to train in batches
+- optimization(model=model.to(device) trains the model on the gpu device that you specified
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

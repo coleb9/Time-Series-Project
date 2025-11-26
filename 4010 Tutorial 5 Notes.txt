@@ -1,0 +1,42 @@
+4010 Tutorial 5 Notes
+
+T1
+- TCN creates large receptive field (can see far back into past without needing dozens of layers)
+- does this by using dilated convolutions
+- uses causal convolutions to make sure there is no future leakage, output only depends on previous inputs
+- has residual connections, which make training deeper stacks easier, no vanishing gradients
+- prediction plot
+Does the predicted line follow the seasonal peaks?
+
+Does it capture trend growth?
+
+Are forecast drops and rises aligned correctly?
+
+Does it hold shape even into the future?
+- MAPE = percentage error, lower is better, 20% means underfitting
+- rmse = avg prediction error in original units
+- r^2 score = how well variance is explained, [0-1], closer to 1 is better
+- ACF plot shows spike at 12 and 24 so makes sense for the seasonality to be 12 months
+
+T2 Transformer
+- encoder only transformer takes past window of timesteps and outputs future window of predictions
+- self attention lets every time step look at every other time step in the input window
+- uses Q, K, V projections and scaled dot product attention
+- uses positional encoding because attention alone doesn't know order
+- it is sequence to sequence: input chunk -> output chunk just like the tcn
+
+summary of transformer
+1. what transformer is actually doing
+- takes window of 10 values (how far back it can see)
+- encodes them into high dimensional 64-dim vector space (how much information can be stored per step)
+- adds sinusoidal positional encodings
+- uses self attention to compare every time step with every other
+- outputs the single next value
+
+- transformers do now see far back unless the input window is long
+- attention only works inside the given window
+- this model only learns short term patterns (10 days)
+
+
+
+

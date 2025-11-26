@@ -1,0 +1,103 @@
+4010 Tutorial 6
+
+Tutorial 1 - Hyperparameter optimization
+first model
+- using stacked LSTM (2 layers LSTM) for time series prediction
+- convert to float32 to make computation easier when passing through neural networks
+- use exploratory data anlysis like in the human activity gyroscope example to determine whether you should scale data 
+- keep in mind the scaling method you use in the presentation ex robust -> helps with outliers. make sure we know why we chose our given scaling because he will ask
+- number one question he likes to ask during course presentation is how they did hyperparameter optimization ex what is the search space
+- review: dimensions (sequence (batch size), sliding window size, input features)
+- stacked LSTM: 2nd LSTM expects a 3D tensor input, so use return_sequences=true to assure that it doesnt drop the 3D tensor input
+- since we scaled the data, if we want to evaluate or test the results, we have to apply inverse transform to get variable back into its original distribution
+- look at stacked test predictions result to make it more clear why we need to reshape back to original size
+- didn't get good results, so will use HP training to improve RMSE and MSE
+
+Hyperparameter tuning grid search
+- kerras regressor, one quick way to apply regression
+- grid search CV cros validation, each time it does the grid search, is saves one of the fold as the validation set, then score it based on the metric of interest (negative mean squared error)
+- .best_params_ seen very often when tuning HP, you want to find values that give you the best model, best params gives you a list of these best values
+- can define a range for each of the parameters in the search space, can also include a quick line of code to skip every other integer value within a range
+- question for assignment -> what is the size of the search space? just multiply the size of each of the HP ranges
+- In course presentation, will ask what the best values after the search were? use stacked_best_params, returns a python dictionary of the best values for each HP
+- units = first HP i want to tune is the number of neurons in each layer
+- pass units=50 so that if 
+- use intuition to determine ranges or possible HP values when tuning
+- he wants to see what values are the best model and how you know that they give you the best model, look at graph and mse
+- this tunes the manual was using GridsearchCV, if you creata for loop to loop trhough HPs
+
+Tutorial 2
+- tunes the easier way (not manual), use premade tuner package
+- classification (image) so the size is (60000, 28, 28) so the image size is 28x28 instead of time
+- go online to keras documentation to keras tuner to build model_builder to define the structure of the model and for the hyperparameters to come in hp_units to make it optimization ready, defines min max values and step size. this is an example of why tuner packages are so useful
+- can also do the same thing for strings to try different optimizers, and of course learning rate and other HPs
+- now when you pass model builder into keras tuner object, it knows what the HPs are
+- use hyperband tuner - uses adaptive resource allocation and early stopping. trains x models over y epochs, get rid of bottom half worst performers, repeat. go to keras documentation to see what it does in depth. 
+- tuner is saving model checkpoint in a directory of your choice after each model is evaluated. 
+- be careful with size of search space, dimensionality, etc when training your model and fine tuning to make sure it doesnt take too long. hypothetically, should only take 1-3 days to tune if everything is done right. so be careful, he is very will to give tips and help.
+- callback function for early stopping if you see the model isn't improving after a certain number of epochs. patience value can be fine tuned based on your patience lol
+- tuner.search(....) keras tuner, going to take a while
+- tuner.get_best_hyperparameters
+- other important part is what you do after tuning these best HPs, now have to design the model with these HPs in mind 
+- when you want validation losses after each epoch, history.history from keras gets a list of these values. useful when graphing the training and valudation data, model.fit will return history and other stuff that can be used similarly
+- can use other tuner packages available online if you want
+
+Tutorial 3
+- time gpt
+- get api key for your account if you want to run this cloud service pre trained model if you want. input your api key into code
+- gpt = generative pretrained transformer
+- generative -> decoder only, already trained on huge dataset, pass in prompt, decode and give best predicted output
+- positional encoding used by transformer to make sure that data values have a relationship to eachother based on their step stamps and predicting the output based on these relationships
+- creating synthetic time series data daily sine+ noise
+- connecting to time-gpt model on the surface
+- if we know it is pretrained, just pass in entire dataset all at once and take advantage of the positional encoding 
+- 
+ex2
+- Minimal TimeLLM
+- same process as before generating syntestic data
+- where have we sen this before? x-mew/sigma = standard scalar = Z score normalization
+- sliding window approach using pytorch this time
+- d model = size of block, gpt heads = number of heads
+- context window size = sequences, same thing
+- encodings, positional encodings, head, output
+-mounting onto a gpu with cuda
+
+Group Project 2 main things they look for
+- understanding of model and conclusions?
+- how does it relate to what you were trying to do in the first place?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
