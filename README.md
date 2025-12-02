@@ -6,7 +6,7 @@ The repository contains a single consolidated notebook (`TimeSeriesProject.ipynb
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 We use the **OPSD Hourly Time Series** dataset:
 [https://data.open-power-system-data.org/time_series/](https://data.open-power-system-data.org/time_series/)
