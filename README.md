@@ -1,82 +1,60 @@
 # Time Series Project — Electricity Load & Renewable Forecasting (Germany)
 
-This project uses deep learning models to forecast hourly electricity load in Germany using data from the Open Power System Data (OPSD) initiative. We compare **LSTM**, **GRU**, and **TCN** architectures to determine which model provides the most accurate next-hour load predictions.
+## Project Overview
+This project implements and benchmarks advanced deep learning architectures to forecast the hourly electricity load in Germany. Using data from the Open Power System Data (OPSD) initiative, we compare LSTM, GRU, and TCN models to determine the most effective approach for grid demand prediction.
 
-The repository contains a single consolidated notebook (`TimeSeriesProject.ipynb`) with the full workflow: dataset loading, preprocessing, feature engineering, model training, and evaluation.
+A key focus of this project is feature ablation (Univariate vs. Multivariate analysis) to quantify the predictive value of including renewable energy generation data (Wind and Solar).
 
----
+The repository contains a single consolidated notebook (`Group-11_Time_Series_Project_Final.ipynb`) with the full workflow: dataset loading, preprocessing, feature engineering, model training, and evaluation.
+
 
 ## Dataset
 
 We use the **OPSD Hourly Time Series** dataset:
 [https://data.open-power-system-data.org/time_series/](https://data.open-power-system-data.org/time_series/)
 
-Columns used (Germany):
+### Input Features (Germany):
 
 * `DE_load_actual_entsoe_transparency` — Actual electrical load
 * `DE_wind_onshore_generation_actual` — Onshore wind generation
 * `DE_solar_generation_actual` — Solar PV generation
 * `utc_timestamp` — Timestamp (UTC)
+* Engineered features: Hour of day, Day of week, Month of year
 
-Engineered features:
 
-* Hour of day
-* Day of week
-* Month of year
+## Methodology & Pipeline
+The notebook (`Group-11_Time_Series_Project_Final.ipynb`) follows a strict leakage-free preprocessing pipeline:
 
----
+1. Data Ingestion: Loading specific German energy columns.
 
-## 🔧 Preprocessing Pipeline
+2. Imputation: Time-based interpolation to handle missing values without altering trends.
 
-The notebook applies the following **leakage-free** preprocessing steps:
+3. Chronological Split: * Train: 70% | Validation: 15% | Test: 15%
 
-### **1. Load the dataset**
+      - _Note_: Data is NOT shuffled to preserve temporal order.
 
-Read the hourly German electricity dataset "time_series_60min_singleindex.csv" into a pandas DataFrame.
+4. Feature Scaling: Standard Scaling fitted only on the Training set to prevent data leakage.
 
-### **2. Select Germany features**
+5. Windowing: Sliding window approach (Lookback: 24 hours → Prediction: Next Hour).
 
-Keep the required columns (load, wind, solar, and engineered time features).
 
-### **3. Fix the timestamp**
+## Model Architectures
+We implemented three distinct architectures to handle the time-series data:
 
-Convert the timestamp column to `datetime`, set it as the index, and sort chronologically.
+1. LSTM (Long Short-Term Memory): * Stacked architecture with Dropout.
 
-### **4. Handle missing values**
+      - Optimized via Grid Search for units and learning rate.
 
-Convert columns to numeric → time-interpolate missing values → forward/backward fill remaining gaps.
+2. GRU (Gated Recurrent Unit): * Evaluated in both Univariate and Multivariate configurations.
 
-### **5. Add time features**
+      - Proved more efficient than LSTM due to streamlined gating (3 gates vs 4).
 
-Extract hour, day of week, and month (optionally using cyclical encodings).
+3. TCN (Temporal Convolutional Network): * Uses Dilated Causal Convolutions to capture long-term dependencies.
 
-### **6. Split into Train / Validation / Test (70 / 15 / 15)**
+      - Optimized using Bayesian Optimization (Keras Tuner) to select the best kernel size, filter count, and dilation depth.
 
-Perform a chronological split on the **raw, unscaled** data to prevent future information leaking into training.
 
-### **7. Scale all features (WITHOUT leakage)**
-
-Fit the scaler **only on the training split**, then transform the validation and test splits using that scaler.
-
-### **8. Create sliding windows** (past 24h → next-hour load)
-
-Windowing is applied **separately** to the scaled train/val/test data to generate input sequences (`X`) and targets (`y`).
-
----
-
-## 🤖 Models
-
-Three deep learning architectures were built and evaluated:
-
-* **LSTM** (Long Short-Term Memory)
-* **GRU** (Gated Recurrent Unit)
-* **TCN** (Temporal Convolutional Network)
-
-Each model uses the past **24 hours** of features to predict the **next hour’s load**.
-
----
-
-## 📈 Evaluation
+## Evaluation
 
 Metrics used:
 
@@ -90,9 +68,8 @@ Visualizations:
 * Training and validation loss/MAE curves
 * Model comparison charts based of calculated metrics
 
----
 
-## ▶️ Running the Notebook
+## Running the Notebook
 
 1. Open the notebook in Google Colab.
 2. Upload `time_series_60min_singleindex.csv`.
@@ -100,19 +77,11 @@ Visualizations:
 4. Train the LSTM, GRU, and TCN models.
 5. Review the evaluation metrics and plots.
 
----
 
-## 🧑‍🤝‍🧑 Group 11
+## Group 11 Members
 
 * Cole Book
 * Adam Dunn
 * Bryce Nielsen
 * Jaemin Cho
-
----
-
-
-
----
-
 
