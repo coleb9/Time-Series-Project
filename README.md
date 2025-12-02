@@ -32,7 +32,7 @@ The notebook applies the following **leakage-free** preprocessing steps:
 
 ### **1. Load the dataset**
 
-Read the hourly German electricity dataset into a pandas DataFrame.
+Read the hourly German electricity dataset "time_series_60min_singleindex.csv" into a pandas DataFrame.
 
 ### **2. Select Germany features**
 
@@ -82,12 +82,13 @@ Metrics used:
 
 * **MAE** — Mean Absolute Error
 * **RMSE** — Root Mean Squared Error
+* **Execution Time** 
 
 Visualizations:
 
 * Predicted vs. actual load curves
 * Training and validation loss/MAE curves
-* Model comparison charts
+* Model comparison charts based of calculated metrics
 
 ---
 
